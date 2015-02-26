@@ -18,7 +18,7 @@ def echo_socket(ws):
                         "created_utc": "123123123", 
                         "emitted": "true"}
         message = json.dumps({'message': comment_dict,'category':'comment', 'thread': 'asda'})
-        ws.send(message)
+        ws.send("messageasdfasdfas")
         time.sleep(5)
 
 @app.route('/chat')
