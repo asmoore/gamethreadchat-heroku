@@ -25,14 +25,37 @@
 </div>
 
 <script type="text/javascript">
-    var ws = new WebSocket("ws://" + location.host + "/echo");
-    ws.onmessage = function(evt){ 
-            var received_msg = evt.data;
-            alert(received_msg);
-    };
+    function addComment(comment_id, author_flair_css_class, author, body, created_utc) {
+        var comment = '<li id="comment" class="collection-item" comment_id="'+comment_id+'">'
+                        +'<div class="row valign-wrapper">'
+                        +'<div class="col s1 unvoted">'
+                        +'<div class="arrow up login-required" onclick="$(this).vote(r.config.vote_hash, null, event)" role="button" aria-label="upvote" tabindex="0" ></div>'
+                        +'<div class="arrow down login-required" onclick="$(this).vote(r.config.vote_hash, null, event)" role="button" aria-label="downvote" tabindex="0" ></div>'
+                        +'</div>'
+                        +'<div class="col s11">'
+                        + '<div class="flair-'+author_flair_css_class+'"></div>'
+                        + '<div id="author"><a href="http://reddit.com/user/'+author+'">'+author+'</a></div>'
+                        + '<span class="secondary-content"><div id="time" created_utc="'+created_utc
+                        +'">just now</div><div class="reply" id="'+comment_id+'"><i class="fa fa-reply fa-sm"></i></div></span>'
+                        + '<div id="body">'+mmd(body)+'</div>'
+                        +'</div></div>'
+                        + '</li>';
+        $('.comments').prepend(comment);
+        }
+    
+    function updateScores(visitor, home) {
+        $('.visitor_score').html(visitor);
+        $('.home_score').html(home);
+    }
 
-    ws.onopen = function(){
-        ws.send("hello john");
+    var ws = new WebSocket("ws://" + location.host + "/echo");
+    ws.onmessage = function(msg){ 
+        var received = JSON.parse(msg.data);
+        if (received.category == 'comment') {
+            addComment(received.message.comment_id, received.message.author_flair_css_class, received.message.author, received.message.body, received.message.created_utc);
+        } else if (received.category == 'score') {
+            updateScores(received.message.sports_content.game.visitor.stats.points, received.message.sports_content.game.home.stats.points)
+        }
     };
 </script>
 
