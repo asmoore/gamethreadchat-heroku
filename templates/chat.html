@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="score-bar z-depth-1" >
+
+</div>
+
+<div class="container full-height">
+    <div class="mainBody">
+        <ul id="chat-text" class="comments collection white z-depth-2">
+        </ul>
+    </div>
+</div>
+
+<div class="messagebox full-width z-depth-1">
+    <form id="input-form" class="form-inline">
+        <div class="form-group">
+          <input id="input-handle" type="text" class="form-control" placeholder="Enter handle" autofocus />
+        </div>
+        <div class="form-group">
+          <input id="input-text" type="text" class="form-control" placeholder="Enter chat text here!" autofocus />
+        </div>
+        <button class="btn btn-primary" type="submit">Send</button>
+    </form>
+</div>
+
+<script type="text/javascript">
+    var ws = new WebSocket("ws://" + location.host + "/echo");
+    ws.onmessage = function(evt){ 
+            var received_msg = evt.data;
+            alert(received_msg);
+    };
+
+    ws.onopen = function(){
+        ws.send("hello john");
+    };
+</script>
+
+{% endblock %}
