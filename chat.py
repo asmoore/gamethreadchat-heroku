@@ -18,10 +18,6 @@ def chat():
     return render_template('chat.html')
 
 @app.route('/')
-def chat():
-    return render_template('home.html')
-
-@app.route('/original')
 def hello():
     return \
 '''
